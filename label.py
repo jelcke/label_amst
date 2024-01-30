@@ -1,6 +1,25 @@
 import json
 import os
+import cups
+import sys
 
+def check_printer_status():
+    conn = cups.Connection()
+
+    printers = conn.getPrinters()
+    printer_name = 'Zebra-Technologies-ZTC-GK420d'  # replace with your printer's name
+
+    if printer_name not in printers:
+        print(f'Error: Printer {printer_name} is not found.')
+        sys.exit(1)
+
+    printer_attributes = conn.getPrinterAttributes(printer_name)
+
+    if printer_attributes["printer-state"] != 3:  # 3 means idle
+        print(f'Error: Printer {printer_name} is not online.')
+        sys.exit(1)
+
+    print(f'Printer {printer_name} is online.')
 
 
 def generate_label(data):
@@ -45,20 +64,11 @@ def generate_label(data):
 ^XZ
 """
     return zpl
-
-# def main():
-#     with open('addresses.json', 'r') as f:
-#         addresses = json.load(f)
-
-#     for address in addresses:
-#         label = generate_label(address)
-#         print(label)
-
-# if __name__ == "__main__":
-#     main()
-
+ 
 
 def main():
+
+    check_printer_status()
     with open('./json/addresses.json', 'r') as f:
         addresses = json.load(f)
 
