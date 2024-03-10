@@ -1,0 +1,44 @@
+2024-03-11 00:24:42 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Authenticating img on https://www.amstelbooks.com/...
+2024-03-11 00:24:43 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:24:43 DEBUG  https://amstelbooks.com:443 "POST /rest/V1/integration/admin/token HTTP/1.1" 200 None
+2024-03-11 00:24:43 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Validating token...
+2024-03-11 00:24:43 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:24:43 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/store/websites HTTP/1.1" 200 None
+2024-03-11 00:24:43 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Token validated for img on https://www.amstelbooks.com/
+2024-03-11 00:24:43 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Logged in to img
+2024-03-11 00:24:43 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:24:45 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/invoices/?searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bfield%5D=entity_id&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bvalue%5D=True&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bcondition_type%5D=notnull HTTP/1.1" 200 None
+2024-03-11 00:27:25 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Authenticating img on https://www.amstelbooks.com/...
+2024-03-11 00:27:25 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:27:25 DEBUG  https://amstelbooks.com:443 "POST /rest/V1/integration/admin/token HTTP/1.1" 200 None
+2024-03-11 00:27:25 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Validating token...
+2024-03-11 00:27:25 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:27:26 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/store/websites HTTP/1.1" 200 None
+2024-03-11 00:27:26 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Token validated for img on https://www.amstelbooks.com/
+2024-03-11 00:27:26 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Logged in to img
+2024-03-11 00:27:26 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:27:28 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/invoices/?searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bfield%5D=entity_id&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bvalue%5D=True&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bcondition_type%5D=notnull HTTP/1.1" 200 None
+2024-03-11 00:27:48 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Authenticating img on https://www.amstelbooks.com/...
+2024-03-11 00:27:48 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:27:49 DEBUG  https://amstelbooks.com:443 "POST /rest/V1/integration/admin/token HTTP/1.1" 200 None
+2024-03-11 00:27:49 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Validating token...
+2024-03-11 00:27:49 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:27:49 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/store/websites HTTP/1.1" 200 None
+2024-03-11 00:27:49 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Token validated for img on https://www.amstelbooks.com/
+2024-03-11 00:27:49 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Logged in to img
+2024-03-11 00:27:49 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:27:51 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/invoices/?searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bfield%5D=entity_id&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bvalue%5D=True&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bcondition_type%5D=notnull HTTP/1.1" 200 None
+2024-03-11 00:27:52 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:27:52 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/invoices/3439 HTTP/1.1" 200 None
+2024-03-11 00:33:02 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Authenticating img on https://www.amstelbooks.com/...
+2024-03-11 00:33:02 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:33:03 DEBUG  https://amstelbooks.com:443 "POST /rest/V1/integration/admin/token HTTP/1.1" 200 None
+2024-03-11 00:33:03 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Validating token...
+2024-03-11 00:33:03 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:33:03 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/store/websites HTTP/1.1" 200 None
+2024-03-11 00:33:03 DEBUG  |[ MyMagento | amstelbooks_com_img ]|:  Token validated for img on https://www.amstelbooks.com/
+2024-03-11 00:33:03 INFO   |[ MyMagento | amstelbooks_com_img ]|:  Logged in to img
+2024-03-11 00:33:03 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:33:05 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/invoices/?searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bfield%5D=entity_id&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bvalue%5D=True&searchCriteria%5Bfilter_groups%5D%5B0%5D%5Bfilters%5D%5B0%5D%5Bcondition_type%5D=notnull HTTP/1.1" 200 None
+2024-03-11 00:33:06 DEBUG  Starting new HTTPS connection (1): amstelbooks.com:443
+2024-03-11 00:33:06 DEBUG  https://amstelbooks.com:443 "GET /rest/V1/invoices/3439 HTTP/1.1" 200 None
