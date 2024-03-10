@@ -1,105 +1,82 @@
 import os
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from typing import List
-from magento import Client  # Ensure this is the correct import for your Magento API package
-import magento
+from magento import Client
 
+# Function to disable SSL verification warnings and patch requests for all instances
+def setup_ssl_patch():
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-def get_shipping_address_for_invoice(latest_invoice):
-    """
-    Retrieve shipping address information for a specific invoice ID.
+    original_request = requests.Session.request
 
-    :param invoice_id: The ID of the invoice to retrieve shipping address for.
-    :return: A dictionary containing shipping address information.
-    """
+    def patched_request(session, method, url, **kwargs):
+        kwargs['verify'] = False  # Disable SSL verification
+        return original_request(session, method, url, **kwargs)
+
+    requests.Session.request = patched_request
+
+# Function to retrieve shipping address for a given invoice
+def get_shipping_address_for_invoice(api, invoice_id):
     # Fetch the invoice by its ID
-    invoice = api.invoices.by_id(latest_invoice).execute()
+    invoice = api.invoices.by_id(invoice_id)
 
     if not invoice:
-        print(f"No invoice found with ID {latest_invoice}")
+        print(f"No invoice found with ID {invoice_id}")
         return {}
 
-    # Assuming the Invoice model has a way to access the associated order
-    # The specific attribute/method to access the order may vary
     order = invoice.order
 
     if not order:
-        print(f"No order associated with invoice ID {latest_invoice}")
+        print(f"No order associated with invoice ID {invoice_id}")
         return {}
 
-    # Assuming the Order model contains shipping address information
-    # Adjust the attributes according to your actual Order model
-    shipping_address = {
-        "name": order.shipping_address.name,
-        "street": order.shipping_address.street,
-        "city": order.shipping_address.city,
-        "region": order.shipping_address.region,
-        "country": order.shipping_address.country,
-        "postal_code": order.shipping_address.postal_code,
+    shipping_address = order.shipping_address
+
+    if not shipping_address:
+        print(f"No shipping address found for order associated with invoice ID {invoice_id}")
+        return {}
+
+    # Correctly access dictionary values using keys
+    shipping_address_info = {
+        "name": shipping_address.get("firstname", "") + " " + shipping_address.get("lastname", ""),  # Combining first and last name
+        "street": " ".join(shipping_address.get("street", [])),  # 'street' might be a list
+        "city": shipping_address.get("city", ""),
+        "region": shipping_address.get("region", ""),  # Sometimes 'region' might be a dictionary with 'region' as a key inside it
+        "country": shipping_address.get("country_id", ""),  # Magento often uses 'country_id' for country codes
+        "postal_code": shipping_address.get("postcode", ""), 
+        "phone": shipping_address.get("telephone", ""),  # Added line for phone number
     }
 
-    return shipping_address
+
+    return shipping_address_info
 
 
-
-# Suppress only the single InsecureRequestWarning from urllib3 needed
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-# Patch 'requests' to skip SSL verification
-original_request = requests.Session.request  # Backup original request method
-
-
-def patched_request(session, method, url, **kwargs):
-    kwargs['verify'] = False  # Disable SSL verification
-    return original_request(session, method, url, **kwargs)
-
-
-requests.Session.request = patched_request  # Apply our patch to 'requests'
-
-# Importing your magento package after patching 'requests'
-import magento
+# Main script execution starts here
+setup_ssl_patch()
 
 # Authentication setup
-domain = 'https://www.amstelbooks.com/'  # Your Magento instance
-username = 'img'  # Replace with your actual username
-password = 'maisli33sasdad'  # Replace with your actual password
-
-# Setting up environment variables for convenience (optional)
-os.environ['MAGENTO_DOMAIN'] = domain
-os.environ['MAGENTO_USERNAME'] = username
-os.environ['MAGENTO_PASSWORD'] = password
+domain = 'https://www.amstelbooks.com/'
+username = 'img'
+password = 'maisli33sasdad'
 
 # Initialize the Magento API client
-api = magento.get_api(domain=domain, username=username, password=password)
+api = Client(domain=domain, username=username, password=password)
 
-
+# Fetch and sort invoices to find the latest one
 invoice_search = api.invoices
-
 invoice_search.add_criteria(field='entity_id', value=True, condition='notnull')
-
-# Execute the search to retrieve invoices with the specified criteria
 invoices = invoice_search.execute()
-
-# Assuming the returned 'invoices' is a list of Invoice model objects, and each has a 'created_at' attribute
-# Sort the invoices by the 'created_at' attribute in descending order to find the latest
 sorted_invoices = sorted(invoices, key=lambda invoice: invoice.created_at, reverse=True) if invoices else []
 
-# The first invoice in the sorted list is the latest
 latest_invoice = sorted_invoices[0] if sorted_invoices else None
 
 if latest_invoice:
-    # Access the properties of the latest invoice as needed
     print(f"Latest Invoice ID: {latest_invoice.id}")
     print(f"Created At: {latest_invoice.created_at}")
-    # Continue accessing other necessary properties...
-else:
-    print("No invoices found.")
 
-latest_invoice = latest_invoice.id
-print (latest_invoice)
-
-shipping_address = get_shipping_address_for_invoice(latest_invoice)
+    # Fetch shipping address for the latest invoice
+latest_invoice_id = latest_invoice.id  # Assuming latest_invoice is an invoice object and has an id attribute
+shipping_address = get_shipping_address_for_invoice(api, latest_invoice_id)
 
 if shipping_address:
     print("Shipping Address Information:")
