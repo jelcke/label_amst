@@ -1,0 +1,16 @@
+[
+    {
+        "name": "John Doe",
+        "street": "123 Main St",
+        "city": "Anytown",
+        "postalCode": "12345",
+        "country": "USA"
+    },
+    {
+        "name": "Jane Smith",
+        "street": "456 Oak St",
+        "city": "Othertown",
+        "postalCode": "67890",
+        "country": "USA"
+    }
+]
