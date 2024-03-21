@@ -86,7 +86,8 @@ if latest_invoice:
     logging.info(f"Created At: {latest_invoice.created_at}")
 
     # Fetch shipping address for the latest invoice
-latest_invoice_id = latest_invoice.id  # Assuming latest_invoice is an invoice object and has an id attribute
+#latest_invoice_id = latest_invoice.id -1  # get one invoice before
+latest_invoice_id = latest_invoice.id   # Assuming latest_invoice is an invoice object and has an id attribute
 shipping_address = get_shipping_address_for_invoice(api, latest_invoice_id)
 
 if shipping_address:
