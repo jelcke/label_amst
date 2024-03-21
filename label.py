@@ -3,6 +3,10 @@ import os
 import shutil
 import cups
 import sys
+import argparse  # Import argparse module
+
+
+company_name = 'Amstelbooks'  # Default company name
 
 def check_printer_status():
     conn = cups.Connection()
@@ -22,16 +26,15 @@ def check_printer_status():
 
     print(f'Printer {printer_name} is online.')
 
-def generate_label(address):
+def generate_label(address, company_name):  # Add company_name parameter
         zpl = f"""
     ^XA
-
     ^FX Top section with logo, name and address.
     ^CF0,60
     ^FO50,50^GB100,100,100^FS
     ^FO75,75^FR^GB100,100,100^FS
     ^FO93,93^GB40,40,40^FS
-    ^FO220,50^FDAmstelbooks^FS
+    ^FO220,50^FD{company_name}^FS  # Use the company_name variable
     ^CF0,30
     ^FO220,115^FDRoute du Moulin du Ranc 550^FS
     ^FO220,155^FD07240 Verrnoux-en-Vivarais^FS
@@ -65,18 +68,33 @@ def generate_label(address):
     """
         return zpl
 
-def process_json_file(json_file_path):
+def process_json_file(json_file_path, company_name):  # Add company_name parameter
     with open(json_file_path, 'r') as f:
         addresses = json.load(f)
 
     for index, address in enumerate(addresses):
-        label_zpl = generate_label(address)
+        label_zpl = generate_label(address, company_name)
         label_file_path = f'./labels/label_{os.path.basename(json_file_path).replace(".json", "")}_{index}.zpl'
         with open(label_file_path, 'w') as f:
             f.write(label_zpl)
         os.system(f'/usr/bin/lprint submit -d ZebraGK420d {label_file_path}')
 
 def main():
+    # Set up argument parsing
+    parser = argparse.ArgumentParser(description='Generate and print labels.')
+    parser.add_argument('--amst', action='store_true', help='Use Amstelbooks as the company name')
+    parser.add_argument('--hifi', action='store_true', help='Use HiFILAB as the company name')
+    args = parser.parse_args()
+
+    # Determine the company name based on command-line options
+    if args.amst:
+        company_name = 'Amstelbooks'
+    elif args.hifi:
+        company_name = 'HiFILAB'
+    else:
+        print("Error: Please specify the company name using --amst or --hifi.")
+        sys.exit(1)
+
     check_printer_status()
     json_folder = './json'
     processed_folder = './json/processed'
@@ -84,10 +102,11 @@ def main():
     if not os.path.exists(processed_folder):
         os.makedirs(processed_folder)
 
+
     for json_file in os.listdir(json_folder):
         if json_file.endswith('.json'):
             json_file_path = os.path.join(json_folder, json_file)
-            process_json_file(json_file_path)
+            process_json_file(json_file_path, company_name)  # Pass company_name
             shutil.move(json_file_path, os.path.join(processed_folder, json_file))
 
 if __name__ == "__main__":
