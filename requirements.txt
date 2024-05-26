@@ -1,4 +1,4 @@
 pycups
-json
 my-magento
 pycups
+#sudo apt-get install libcups2-dev
