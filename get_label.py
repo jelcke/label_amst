@@ -2,12 +2,13 @@ import os
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from magento import Client
+#from magento.client import Client
 # Import the country_id_to_name_fr dictionary from the iso.py file
 from iso import country_id_to_name_fr
 import logging
 
 
-logging.basicConfig(filename='get_label.log', level=logging.ERROR)
+logging.basicConfig(filename='logs/get_label.log', level=logging.ERROR)
 
 # Function to disable SSL verification warnings and patch requests for all instances
 def setup_ssl_patch():
@@ -87,7 +88,7 @@ if latest_invoice:
 
     # Fetch shipping address for the latest invoice
 #latest_invoice_id = latest_invoice.id -1  # get one invoice before
-latest_invoice_id = latest_invoice.id   # Assuming latest_invoice is an invoice object and has an id attribute
+latest_invoice_id = latest_invoice.id    # Assuming latest_invoice is an invoice object and has an id attribute
 shipping_address = get_shipping_address_for_invoice(api, latest_invoice_id)
 
 if shipping_address:
