@@ -5,4 +5,4 @@ bank/
 get_label.log
 *.log
 __pycache__
-log/*
+logs/*
