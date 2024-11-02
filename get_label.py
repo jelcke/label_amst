@@ -6,6 +6,7 @@ from magento import Client
 from iso import country_id_to_name_fr
 import logging
 from datetime import datetime
+import argparse
 
 # Configuration section
 LOG_DIR = 'logs'
@@ -66,12 +67,25 @@ def get_shipping_address_for_invoice(api, invoice_id):
         }
 
         return shipping_address_info
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            logging.error(f"Invoice ID {invoice_id} not found (404). Please verify the invoice ID.")
+            print(f"Invoice ID {invoice_id} not found. Please verify the invoice ID and try again.")
+        else:
+            logging.error(f"HTTP error occurred: {e}")
+            print(f"An error occurred: {e}")
     except Exception as e:
         logging.error(f"Error retrieving shipping address for invoice ID {invoice_id}: {str(e)}", exc_info=True)
-        return {}
-
+        print(f"Error retrieving shipping address for invoice ID {invoice_id}.")
+    return {}
 # Main script execution starts here
 setup_ssl_patch()
+
+# Command-line argument setup
+parser = argparse.ArgumentParser(description='Process an invoice ID to retrieve and print the shipping label.')
+parser.add_argument('--invoice-id', type=str, help='Specify the invoice ID to retrieve the shipping label for.')
+
+args = parser.parse_args()
 
 # Authentication setup
 domain = 'https://www.amstelbooks.com/'
@@ -82,32 +96,35 @@ try:
     # Initialize the Magento API client
     api = Client(domain=domain, username=username, password=password)
 
-    # Fetch and sort invoices to find the latest one
-    invoice_search = api.invoices
-    invoice_search.add_criteria(field='entity_id', value=True, condition='notnull')
-    invoices = invoice_search.execute()
-    sorted_invoices = sorted(invoices, key=lambda invoice: invoice.created_at, reverse=True) if invoices else []
+    invoice_id = args.invoice_id
 
-    latest_invoice = sorted_invoices[0] if sorted_invoices else None
+    if invoice_id:
+        logging.info(f"Fetching invoice with ID: {invoice_id}")
+    else:
+        logging.info("No invoice ID provided. Fetching the latest invoice.")
+        # Fetch and sort invoices to find the latest one
+        invoice_search = api.invoices
+        invoice_search.add_criteria(field='entity_id', value=True, condition='notnull')
+        invoices = invoice_search.execute()
+        sorted_invoices = sorted(invoices, key=lambda invoice: invoice.created_at, reverse=True) if invoices else []
 
-    if latest_invoice:
-        logging.info(f"Latest Invoice ID: {latest_invoice.id}")
-        logging.info(f"Created At: {latest_invoice.created_at}")
+        latest_invoice = sorted_invoices[0] if sorted_invoices else None
+        invoice_id = latest_invoice.id if latest_invoice else None
 
-        # Fetch shipping address for the latest invoice
-        latest_invoice_id = latest_invoice.id
-        shipping_address = get_shipping_address_for_invoice(api, latest_invoice_id)
+    if invoice_id:
+        # Fetch shipping address for the provided or latest invoice
+        shipping_address = get_shipping_address_for_invoice(api, invoice_id)
 
         if shipping_address:
             print("Shipping Address Information:")
             for key, value in shipping_address.items():
                 print(f"{key.title()}: {value}")
 
-            # Save to file called shipping_address{latest_invoice_id}.json in the json directory
+            # Save to file called shipping_address{invoice_id}.json in the json directory
             directory = '/home/jelcke/dev/prod/label_amst/json'
             if not os.path.exists(directory):
                 os.makedirs(directory)
-            file_path = os.path.join(directory, f'shipping_address{latest_invoice_id}.json')
+            file_path = os.path.join(directory, f'shipping_address{invoice_id}.json')
 
             with open(file_path, 'w') as file:
                 json.dump([shipping_address], file, ensure_ascii=False, indent=4)
