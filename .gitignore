@@ -6,3 +6,4 @@ get_label.log
 *.log
 __pycache__
 logs/*
+addresses.txt
